@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package edu.eci.arsw.blueprints.persistence;
+import java.util.Set;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
 
@@ -11,6 +12,7 @@ import edu.eci.arsw.blueprints.model.Blueprint;
  *
  * @author hcadavid
  */
+
 public interface BlueprintsPersistence {
     
     /**
@@ -29,5 +31,14 @@ public interface BlueprintsPersistence {
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
     public Blueprint getBlueprint(String author,String bprintname) throws BlueprintNotFoundException;
+
+    /**
+     * 
+     * @param author
+     * @return the set containing all blueprints of the given author
+     * @throws BlueprintNotFoundException if there is no such blueprint
+     */
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException;
+
     
 }

@@ -21,11 +21,74 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
 	Lo anterior requiere:
 
 	* Agregar las dependencias de Spring.
+		Las dependencias de Spring ya están registradas en el Pom.
 	* Agregar la configuración de Spring.
+		La configuracion de Spring para soluciobar este punto ya estaba hecha.
 	* Configurar la aplicación -mediante anotaciones- para que el esquema de persistencia sea inyectado al momento de ser creado el bean 'BlueprintServices'.
+		Para poder hacer esto, se mantiene la anotacion de @Service a la *BluePrintsServices*, adicionalmente se utiliza la anotación de @Component para la interfaz *InmMemoryBluePrintInterface*, teniendo en cuenta que pueden ghaber más tipos se le añade la anotacion de @Qualifier como se muestra en el siguiente código: 
 
+		```java
+		@Component
+		@Qualifier("InMemory")
+		public class InMemoryBlueprintPersistence implements BlueprintsPersistence{}
+		```
+		```java
+		@Service
+		public class BlueprintsServices {}
+    		@Autowired
+    		@Qualifier("InMemory")
+    		BlueprintsPersistence bpp;
+		```
 
 2. Complete los operaciones getBluePrint() y getBlueprintsByAuthor(). Implemente todo lo requerido de las capas inferiores (por ahora, el esquema de persistencia disponible 'InMemoryBlueprintPersistence') agregando las pruebas correspondientes en 'InMemoryPersistenceTest'.
+	
+	Para poder hacer esto primero que todo añadimos el metodo getBlueprintsByAuthor() en la interfaz *BlueprintsPersistance*, posteriormente agregamos la implementación en *InMemoryBlueprintPersistence*
+
+	- **En BlueprintsPersistance**
+	```java
+		/**
+     * 
+     * @param author
+     * @return the set containing all blueprints of the given author
+     * @throws BlueprintNotFoundException if there is no such blueprint
+     */
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException;
+	```
+
+	- **En InMemoryBlueprintPersistance¨**:
+	```java
+	@Override
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException {
+        Set<Blueprint> blueprintsByAuthor = new HashSet<>();
+        for(Blueprint bp: new ArrayList<>(blueprints.values())){
+            if(bp.getAuthor().equals(author)){
+                blueprintsByAuthor.add(bp);
+            }
+        }
+        if(blueprintsByAuthor.isEmpty()){
+            throw new BlueprintNotFoundException("Blueprint not found");
+        }
+        return blueprintsByAuthor;
+    }
+	```
+
+	- **En BlueprintsServices**
+	```java
+	/**
+     * 
+     * @param author blueprint's author
+     * @return all the blueprints of the given author
+     * @throws BlueprintNotFoundException if the given author doesn't exist
+     */
+    public Set<Blueprint> getBlueprintsByAuthor(String author){
+        try {
+            return bpp.getBlueprintsByAuthor(author);
+        } catch (BlueprintNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+	```
 
 3. Haga un programa en el que cree (mediante Spring) una instancia de BlueprintServices, y rectifique la funcionalidad del mismo: registrar planos, consultar planos, registrar planos específicos, etc.
 
