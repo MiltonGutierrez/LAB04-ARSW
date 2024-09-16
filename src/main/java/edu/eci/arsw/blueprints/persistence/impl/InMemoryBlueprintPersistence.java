@@ -14,7 +14,6 @@ import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Component;
  * @author hcadavid
  */
 @Component
-@Qualifier("InMemory")
+@Qualifier("inMemory")
 public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     private final Map<Tuple<String,String>,Blueprint> blueprints=new HashMap<>();

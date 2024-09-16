@@ -10,6 +10,8 @@ import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.impl.InMemoryBlueprintPersistence;
+import edu.eci.arsw.blueprints.services.BlueprintsServices;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
@@ -69,6 +71,25 @@ public class InMemoryPersistenceTest {
         
     }
 
+    @Test
+    public void getBlueprintsByAuthorTest() throws BlueprintPersistenceException, BlueprintNotFoundException{
+        InMemoryBlueprintPersistence ibpp = new InMemoryBlueprintPersistence();
+
+        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15)};
+        Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
+        
+        ibpp.saveBlueprint(bp0);
+
+        Point[] pts=new Point[]{new Point(0, 0),new Point(10, 10)};
+        Blueprint bp=new Blueprint("mack", "thepaint",pts);
+        
+        ibpp.saveBlueprint(bp);
+
+        assertNotNull("Loading a previously stored blueprint returned null.", ibpp.getBlueprintsByAuthor("mack"));
+
+        assertEquals("Method didn't return all of the blueprints.", ibpp.getBlueprintsByAuthor("mack").size(), 2);
+        
+    }
 
     
 }

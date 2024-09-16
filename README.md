@@ -49,7 +49,7 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
 
 	- **En BlueprintsPersistance**
 	```java
-		/**
+	/**
      * 
      * @param author
      * @return the set containing all blueprints of the given author
@@ -58,7 +58,7 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException;
 	```
 
-	- **En InMemoryBlueprintPersistance¨**:
+	- **En InMemoryBlueprintPersistance**:
 	```java
 	@Override
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException {
@@ -77,19 +77,46 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
 
 	- **En BlueprintsServices**
 	```java
-	/**
+    /**
      * 
      * @param author blueprint's author
      * @return all the blueprints of the given author
      * @throws BlueprintNotFoundException if the given author doesn't exist
      */
-    public Set<Blueprint> getBlueprintsByAuthor(String author){
-        try {
-            return bpp.getBlueprintsByAuthor(author);
-        } catch (BlueprintNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
+        return bpp.getBlueprintsByAuthor(author);
+    }
+
+	/**
+     * Permite añadir nuevas instancias de BluePrint a la persistencia
+     * @param bp
+     * @throws BlueprintPersistenceException 
+     */
+    public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException{
+        bpp.saveBlueprint(bp);
+    }
+	```
+
+	- **En InMemoryPersistanceTest**:
+	```java
+	@Test
+    public void getBlueprintsByAuthorTest() throws BlueprintPersistenceException, BlueprintNotFoundException{
+        InMemoryBlueprintPersistence ibpp = new InMemoryBlueprintPersistence();
+
+        Point[] pts0=new Point[]{new Point(40, 40),new Point(15, 15)};
+        Blueprint bp0=new Blueprint("mack", "mypaint",pts0);
+        
+        ibpp.saveBlueprint(bp0);
+
+        Point[] pts=new Point[]{new Point(0, 0),new Point(10, 10)};
+        Blueprint bp=new Blueprint("mack", "thepaint",pts);
+        
+        ibpp.saveBlueprint(bp);
+
+        assertNotNull("Loading a previously stored blueprint returned null.", ibpp.getBlueprintsByAuthor("mack"));
+
+        assertEquals("Method didn't return all of the blueprints.", ibpp.getBlueprintsByAuthor("mack").size(), 2);
+        
     }
 	```
 

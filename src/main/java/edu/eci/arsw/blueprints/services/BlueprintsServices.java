@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class BlueprintsServices {
    
     @Autowired
-    @Qualifier("InMemory")
+    @Qualifier("inMemory")
     BlueprintsPersistence bpp;
     
     /**
@@ -48,13 +48,9 @@ public class BlueprintsServices {
      * @return the blueprint of the given name created by the given author
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
-    public Blueprint getBlueprint(String author,String name) {
-        try {
-            return  bpp.getBlueprint(author, name);
-        } catch (BlueprintNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException {
+        return  bpp.getBlueprint(author, name);
+
     }
     
     /**
@@ -63,13 +59,8 @@ public class BlueprintsServices {
      * @return all the blueprints of the given author
      * @throws BlueprintNotFoundException if the given author doesn't exist
      */
-    public Set<Blueprint> getBlueprintsByAuthor(String author){
-        try {
-            return bpp.getBlueprintsByAuthor(author);
-        } catch (BlueprintNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
+        return bpp.getBlueprintsByAuthor(author);
     }
     
 }
