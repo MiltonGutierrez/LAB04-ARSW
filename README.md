@@ -206,4 +206,119 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
 	* (A) Filtrado de redundancias: suprime del plano los puntos consecutivos que sean repetidos.
 	* (B) Filtrado de submuestreo: suprime 1 de cada 2 puntos del plano, de manera intercalada.
 
+    Para poder solucionar esto se crea una interfaz llamada *Filter*, además de las clases que hereden de esta para poder tener los dos diferentes filtros
+    *RedundancyFilter* y *SubSamplingFilter*:
+
+    La interfaz por el momento solo contendrá un metodo abstracto siendo este *filter()*:
+    ```java
+        public interface Filter {
+            public void filterBlueprint(Blueprint bp);
+        }
+    ```
+    
+    - **Filtrado de redundancias:¨**
+    ```java
+        @Service
+        @Qualifier("Redundancy")
+        public class RedundancyFilter implements Filter {
+
+            @Override
+            public void filterBlueprint(Blueprint blueprint) {
+                List<Point> blueprintPoints = blueprint.getPoints();
+                Point basePoint = blueprintPoints.get(0);
+                for(int i = 1; i < blueprintPoints.size(); i++){
+                    if(basePoint.equals(blueprintPoints.get(i))){
+                        blueprintPoints.remove(basePoint);
+                        basePoint = blueprintPoints.get(i);
+                    }
+                    else{
+                        basePoint = blueprintPoints.get(i);
+                    }
+                }
+            }
+        }
+    ```
+    - **Filtrado de submuestreo:**
+    ```java
+        @Service
+        @Qualifier("SubSampling")
+        public class SubSamplingFilter implements Filter{
+            
+            @Override
+            public void filterBlueprint(Blueprint bp) {
+                int cont = 1;
+                while(cont < bp.getPoints().size()){
+                    if(cont % 3 == 0){
+                        bp.getPoints().remove(cont - 1);
+                    }
+                    cont++;
+                }
+            }   
+        }
+    ```
+
+    Adicionalmente para poder facilitar la implementación de los métodos de filtrado se reescribio el metodo *equals()* de la clase *Point*:
+    ```java
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Point other = (Point) obj;
+            if (!Objects.equals(this.x, other.x)) {
+                return false;
+            }
+            if (!Objects.equals(this.y, other.y)) {
+                return false;
+            }    
+            return true;
+        }
+    ```
+    
+
+
+    También en *BlueprintServices* se le hace la inyección de el servicio de filtrado, además, a cada uno de los metodos de consulta de  se les debe hacer el filtrado a las blueprints.
+
+    - **Inyección**:
+    ```java
+        @Autowired
+        @Qualifier("Redundancy")
+        Filter filter;
+    ```
+
+    - **getAllBlueprints()**
+    ```java
+        public Set<Blueprint> getAllBlueprints(){
+            for(Blueprint bp: blueprintsPersistence.getAllBlueprints()){
+                filter.filterBlueprint(bp);
+            }
+            return blueprintsPersistence.getAllBlueprints();
+        }
+    ```
+    -**getBlueprint()**
+    ```java
+        public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException {
+            Blueprint blueprint = blueprintsPersistence.getBlueprint(author, name);
+            filter.filterBlueprint(blueprint);
+            return blueprint;
+        }
+    ```
+
+    -**getBlueprintsByAuthor()**
+    ```java
+        public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
+            for(Blueprint bp: blueprintsPersistence.getBlueprintsByAuthor(author)){
+                filter.filterBlueprint(bp);
+            }
+            return blueprintsPersistence.getBlueprintsByAuthor(author);
+        }
+    ```
+
+
 5. Agrege las pruebas correspondientes a cada uno de estos filtros, y pruebe su funcionamiento en el programa de prueba, comprobando que sólo cambiando la posición de las anotaciones -sin cambiar nada más-, el programa retorne los planos filtrados de la manera (A) o de la manera (B). 

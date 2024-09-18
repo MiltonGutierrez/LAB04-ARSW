@@ -9,6 +9,8 @@ import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
+import edu.eci.arsw.blueprints.services.fIlter.Filter;
+import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,17 +22,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BlueprintsServices {
+    @Autowired
+    @Qualifier("Redundancy")
+    Filter filter;
    
     @Autowired
     @Qualifier("inMemory")
-    BlueprintsPersistence bpp;
+    BlueprintsPersistence blueprintsPersistence;
     
     /**
      * Sets the BlueprintsPersistance.
      * @param bpp
      */
     public void setBlueprintsPersistance(BlueprintsPersistence bpp){
-        this.bpp = bpp;
+        this.blueprintsPersistence = bpp;
     }
 
     /**
@@ -38,7 +43,15 @@ public class BlueprintsServices {
      * @return the blueprintspersistance.
      */
     public BlueprintsPersistence getBlueprintsPersistence(){
-        return bpp;
+        return blueprintsPersistence;
+    }
+
+    /**
+     * Sets the filter to use
+     * @param flt
+     */
+    public void setFilter(Filter flt){
+        this.filter = flt;
     }
 
     /**
@@ -47,7 +60,7 @@ public class BlueprintsServices {
      * @throws BlueprintPersistenceException 
      */
     public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException{
-        bpp.saveBlueprint(bp);
+        blueprintsPersistence.saveBlueprint(bp);
     }
     
     /**
@@ -55,7 +68,10 @@ public class BlueprintsServices {
      * @return a set with all the blueprints saved.
      */
     public Set<Blueprint> getAllBlueprints(){
-        return bpp.getAllBlueprints();
+        for(Blueprint bp: blueprintsPersistence.getAllBlueprints()){
+            filter.filterBlueprint(bp);
+        }
+        return blueprintsPersistence.getAllBlueprints();
     }
     
     /**
@@ -66,8 +82,9 @@ public class BlueprintsServices {
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
     public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException {
-        return  bpp.getBlueprint(author, name);
-
+        Blueprint blueprint = blueprintsPersistence.getBlueprint(author, name);
+        filter.filterBlueprint(blueprint);
+        return blueprint;
     }
     
     /**
@@ -77,7 +94,10 @@ public class BlueprintsServices {
      * @throws BlueprintNotFoundException if the given author doesn't exist
      */
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
-        return bpp.getBlueprintsByAuthor(author);
+        for(Blueprint bp: blueprintsPersistence.getBlueprintsByAuthor(author)){
+            filter.filterBlueprint(bp);
+        }
+        return blueprintsPersistence.getBlueprintsByAuthor(author);
     }
     
 }
