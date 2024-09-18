@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
  *
  * @author hcadavid
  */
-@Component
-@Qualifier("NotFoundException")
+
 public class BlueprintNotFoundException extends Exception{
 
     public BlueprintNotFoundException(String message) {

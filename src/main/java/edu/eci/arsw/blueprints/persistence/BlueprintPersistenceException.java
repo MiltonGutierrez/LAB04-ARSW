@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
  * @author hcadavid
  */
 
- @Component
- @Qualifier("PersisntenceException")
+ 
 public class BlueprintPersistenceException extends Exception{
 
     public BlueprintPersistenceException(String message) {

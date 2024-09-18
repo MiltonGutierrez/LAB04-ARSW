@@ -6,12 +6,9 @@
 package edu.eci.arsw.blueprints.services;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
-import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,7 +26,23 @@ public class BlueprintsServices {
     BlueprintsPersistence bpp;
     
     /**
-     * Permite añadir nuevas instancias de BluePrint a la persistencia
+     * Sets the BlueprintsPersistance.
+     * @param bpp
+     */
+    public void setBlueprintsPersistance(BlueprintsPersistence bpp){
+        this.bpp = bpp;
+    }
+
+    /**
+     * 
+     * @return the blueprintspersistance.
+     */
+    public BlueprintsPersistence getBlueprintsPersistence(){
+        return bpp;
+    }
+
+    /**
+     * Adds the blueprint using the BlueprintPersistance method.
      * @param bp
      * @throws BlueprintPersistenceException 
      */
@@ -37,8 +50,12 @@ public class BlueprintsServices {
         bpp.saveBlueprint(bp);
     }
     
+    /**
+     * 
+     * @return a set with all the blueprints saved.
+     */
     public Set<Blueprint> getAllBlueprints(){
-        return null;
+        return bpp.getAllBlueprints();
     }
     
     /**

@@ -122,6 +122,86 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
 
 3. Haga un programa en el que cree (mediante Spring) una instancia de BlueprintServices, y rectifique la funcionalidad del mismo: registrar planos, consultar planos, registrar planos específicos, etc.
 
+    Para esto requerimos crear una clase Main que se encargue de inicializar las instancias con el uso de ApplicationContext, adicionalmente se requiere crear el documento de configuracion de beans, basandonos en el desarrollo de la introduccion a Spring se necesitará crear un documento xml con los datos del contexto de la aplicación. Esto lo realizamos utilizando ApacheNetBeans, resutando en la siguiente configuración:
+
+    **applicationContext.xml**
+    ```xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <beans xmlns="http://www.springframework.org/schema/beans"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:context="http://www.springframework.org/schema/context"
+
+                xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+                ">
+
+            <context:component-scan base-package="edu.eci.arsw" />
+        </beans>
+
+    ```
+
+    **nb-configuration.xml**
+    ```xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project-shared-configuration>
+        <!--
+        This file contains additional configuration written by modules in the NetBeans IDE.
+        The configuration is intended to be shared among all the users of project and
+        therefore it is assumed to be part of version control checkout.
+        Without this configuration present, some functionality in the IDE may be limited or fail altogether.
+        -->
+            <spring-data xmlns="http://www.netbeans.org/ns/spring-data/1">
+                <config-files>
+                    <config-file>src/main/resources/applicationContext.xml</config-file>
+                </config-files>
+                <config-file-groups/>
+            </spring-data><?xml version="1.0" encoding="UTF-8"?>
+        <project-shared-configuration>
+    ```
+
+    Adicionalmente se mostrará la funcionalidad de los métodos con el siguiente codigo en Main:
+
+    ```Java
+        public class Main {
+            public static void main(String[] args) throws BlueprintPersistenceException, BlueprintNotFoundException{
+                ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+                BlueprintsServices bp = ac.getBean(BlueprintsServices.class);
+                //Registrar planos
+                bp.addNewBlueprint(new Blueprint("Andres", "plano1", new Point[]{new Point(1,2), new Point(3,4)}));
+                
+                bp.addNewBlueprint(new Blueprint("Andres", "plano2", new Point[]{new Point(5,3), new Point(3,4)}));
+                
+                bp.addNewBlueprint(new Blueprint("Milton", "plano3", new Point[]{new Point(5,8), new Point(1,4)}));
+
+                //Consultar planos
+                
+                System.out.println("Consultando todos los planos\n");
+
+                for(Blueprint blueprint: bp.getAllBlueprints()){
+                    System.out.println(blueprint.toString());
+                }
+                System.out.println("\n");
+
+                System.out.println("Consultando todos los planos del Autor: Andres\n");
+                
+                for(Blueprint blueprint: bp.getBlueprintsByAuthor("Andres")){
+                    System.out.println(blueprint.toString());
+                }
+                System.out.println("\n");
+                System.out.println("Consultando plano especificos\n");
+                
+                System.out.println(bp.getBlueprint("Milton", "plano3"));
+
+            }
+        }
+    ```
+
+    **Resultados**
+    <p align="center">
+	   <img src="img/screenshots/rundemain.png" alt="resultado1" width="700px">
+	</p>
+
+
 4. Se quiere que las operaciones de consulta de planos realicen un proceso de filtrado, antes de retornar los planos consultados. Dichos filtros lo que buscan es reducir el tamaño de los planos, removiendo datos redundantes o simplemente submuestrando, antes de retornarlos. Ajuste la aplicación (agregando las abstracciones e implementaciones que considere) para que a la clase BlueprintServices se le inyecte uno de dos posibles 'filtros' (o eventuales futuros filtros). No se contempla el uso de más de uno a la vez:
 	* (A) Filtrado de redundancias: suprime del plano los puntos consecutivos que sean repetidos.
 	* (B) Filtrado de submuestreo: suprime 1 de cada 2 puntos del plano, de manera intercalada.
