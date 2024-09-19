@@ -345,6 +345,6 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
         @Qualifier("SubSampling")
         Filter filter;
     ```
-        <p align="center">
+    <p align="center">
 	   <img src="img/screenshots/punto4sub.png" alt="resultado1" width="700px">
 	</p>
