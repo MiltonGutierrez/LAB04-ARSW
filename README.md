@@ -326,3 +326,25 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
     <p align="center">
 	   <img src="img/screenshots/punto4tests.png" alt="resultado1" width="700px">
 	</p>
+
+    Ahora el funcionamiento solo cambiando las anotaciones, en este caso lo implemente de otra manera con qualifier, asi que lo unico que toca hacer es cambiar el nombre en la clase donde se inyecta *BluePrintServices* para que cambie el funcionamiento:
+
+    - **RedundancyFilter**
+    ```java
+        @Autowired
+        @Qualifier("Redundancy")
+        Filter filter;
+    ```
+    <p align="center">
+	   <img src="img/screenshots/punto4redundancy.png" alt="resultado1" width="700px">
+	</p>
+
+    - **SubSamplingFilter**
+    ```java
+        @Autowired
+        @Qualifier("SubSampling")
+        Filter filter;
+    ```
+        <p align="center">
+	   <img src="img/screenshots/punto4sub.png" alt="resultado1" width="700px">
+	</p>

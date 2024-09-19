@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlueprintsServices {
     @Autowired
-    @Qualifier("Redundancy")
+    @Qualifier("SubSampling")
     Filter filter;
    
     @Autowired
