@@ -216,7 +216,7 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
         }
     ```
     
-    - **Filtrado de redundancias:¨**
+    - **Filtrado de redundancias:**
     ```java
         @Service
         @Qualifier("Redundancy")
@@ -241,18 +241,16 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
     ```java
         @Service
         @Qualifier("SubSampling")
-        public class SubSamplingFilter implements Filter{
-            
-            @Override
-            public void filterBlueprint(Blueprint bp) {
-                int cont = 1;
-                while(cont < bp.getPoints().size()){
-                    if(cont % 3 == 0){
-                        bp.getPoints().remove(cont - 1);
-                    }
-                    cont++;
+        public void filterBlueprint(Blueprint bp) {
+            int cont = 0;
+            int removed = 0;
+            while(cont < bp.getPoints().size()){
+                if((cont + 1 + removed) % 3 == 0){
+                    removed++;
+                    bp.getPoints().remove(cont);
                 }
-            }   
+                cont++;
+            }
         }
     ```
 
