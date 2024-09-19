@@ -220,21 +220,20 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
     ```java
         @Service
         @Qualifier("Redundancy")
-        public class RedundancyFilter implements Filter {
-
-            @Override
-            public void filterBlueprint(Blueprint blueprint) {
-                List<Point> blueprintPoints = blueprint.getPoints();
-                Point basePoint = blueprintPoints.get(0);
-                for(int i = 1; i < blueprintPoints.size(); i++){
-                    if(basePoint.equals(blueprintPoints.get(i))){
-                        blueprintPoints.remove(basePoint);
-                        basePoint = blueprintPoints.get(i);
-                    }
-                    else{
-                        basePoint = blueprintPoints.get(i);
-                    }
+        public void filterBlueprint(Blueprint blueprint) {
+            ArrayList<Point> blueprintPoints = blueprint.getPoints();
+            int indexList = 1;
+            int indexBase = 0;
+            Point basePoint = blueprintPoints.get(indexBase);
+            while(indexList < blueprintPoints.size()){
+                if(basePoint.equals(blueprintPoints.get(indexList))){
+                    blueprintPoints.remove(indexBase);
                 }
+                else{
+                    indexList++;
+                    indexBase++;
+                }
+                basePoint = blueprintPoints.get(indexBase);    
             }
         }
     ```
@@ -322,3 +321,8 @@ En este ejercicio se va a construír un modelo de clases para la capa lógica de
 
 
 5. Agrege las pruebas correspondientes a cada uno de estos filtros, y pruebe su funcionamiento en el programa de prueba, comprobando que sólo cambiando la posición de las anotaciones -sin cambiar nada más-, el programa retorne los planos filtrados de la manera (A) o de la manera (B). 
+
+    Se agregaron las pruebas de cada uno de los filtros y como se puede ver en la siguiente imagen se comprueba el correcto funcionamiento de los metodos implementados. 
+    <p align="center">
+	   <img src="img/screenshots/punto4tests.png" alt="resultado1" width="700px">
+	</p>

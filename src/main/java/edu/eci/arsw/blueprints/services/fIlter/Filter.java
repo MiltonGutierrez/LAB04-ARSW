@@ -1,4 +1,4 @@
-package edu.eci.arsw.blueprints.services.fIlter;
+package edu.eci.arsw.blueprints.services.filter;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
 

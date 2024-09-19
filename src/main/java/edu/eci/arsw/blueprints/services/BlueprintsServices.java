@@ -9,7 +9,8 @@ import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
-import edu.eci.arsw.blueprints.services.fIlter.Filter;
+import edu.eci.arsw.blueprints.services.filter.Filter;
+
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,14 @@ public class BlueprintsServices {
      */
     public void setFilter(Filter flt){
         this.filter = flt;
+    }
+
+    /**
+     * 
+     * @return the blueprintsservices's filter
+     */
+    public Filter getFilter(){
+        return filter;
     }
 
     /**

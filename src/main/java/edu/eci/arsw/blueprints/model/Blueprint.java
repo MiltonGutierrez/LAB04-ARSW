@@ -1,24 +1,27 @@
 
 package edu.eci.arsw.blueprints.model;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import javax.swing.AbstractListModel;
 
 
 public class Blueprint {
 
     private String author=null;
     
-    private List<Point> points=null;
+    private ArrayList<Point> points=null;
     
     private String name=null;
             
     public Blueprint(String author,String name,Point[] pnts){
         this.author=author;
         this.name=name;
-        points=Arrays.asList(pnts);
+        points = new ArrayList(Arrays.asList(pnts));
     }
          
     public Blueprint(String author, String name){
@@ -37,7 +40,7 @@ public class Blueprint {
         return author;
     }
     
-    public List<Point> getPoints() {
+    public ArrayList<Point> getPoints() {
         return points;
     }
     
